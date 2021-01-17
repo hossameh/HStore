@@ -50,7 +50,7 @@ namespace HStore.Controllers
         // GET: ClientsPayments/Create
         public IActionResult Create()
         {
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Id");
+            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Name");
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id");
             return View();
         }
@@ -68,7 +68,7 @@ namespace HStore.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Id", clientsPayments.ClientId);
+            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Name", clientsPayments.ClientId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", clientsPayments.UserId);
             return View(clientsPayments);
         }
@@ -86,7 +86,7 @@ namespace HStore.Controllers
             {
                 return NotFound();
             }
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Id", clientsPayments.ClientId);
+            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Name", clientsPayments.ClientId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", clientsPayments.UserId);
             return View(clientsPayments);
         }

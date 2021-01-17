@@ -1,17 +1,16 @@
-﻿@model IEnumerable<HStore.SuppliersPayments>
+﻿@model IEnumerable<HStore.PurchaseRequest>
 
 @{
     ViewData["Title"] = "Index";
 }
-
 <p>
     <a asp-action="Create" class="btn btn-success pull-right">Create New</a>
 </p>
 <div class="clearfix"></div>
 <div class="card">
     <div class="card-header card-header-primary">
-        <h4 class="card-title ">Suppliers Payments</h4>
-        <p class="card-category"> Table contains Suppliers payments</p>
+        <h4 class="card-title ">Purchase Requests</h4>
+        <p class="card-category"> Table contains Purchase Requests details</p>
     </div>
     <div class="card-body">
         <div class="table-responsive">
@@ -19,16 +18,22 @@
                 <thead>
                     <tr>
                         <th>
+                            @Html.DisplayNameFor(model => model.InvoiceNumber)
+                        </th>
+                        <th>
                             @Html.DisplayNameFor(model => model.Supplier)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.PaymentValue)
+                            @Html.DisplayNameFor(model => model.PurchaseDate)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.PaymentDate)
+                            @Html.DisplayNameFor(model => model.Paid)
                         </th>
                         <th>
-                            @Html.DisplayNameFor(model => model.PaymentComment)
+                            @Html.DisplayNameFor(model => model.Remaining)
+                        </th>
+                        <th>
+                            @Html.DisplayNameFor(model => model.TotalAmount)
                         </th>
                         <th>
                             @Html.DisplayNameFor(model => model.CreationDate)
@@ -44,16 +49,22 @@
                     {
                         <tr>
                             <td>
+                                @Html.DisplayFor(modelItem => item.InvoiceNumber)
+                            </td>
+                            <td>
                                 @Html.DisplayFor(modelItem => item.Supplier.Name)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.PaymentValue)
+                                @Html.DisplayFor(modelItem => item.PurchaseDate)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.PaymentDate)
+                                @Html.DisplayFor(modelItem => item.Paid)
                             </td>
                             <td>
-                                @Html.DisplayFor(modelItem => item.PaymentComment)
+                                @Html.DisplayFor(modelItem => item.Remaining)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.TotalAmount)
                             </td>
                             <td>
                                 @Html.DisplayFor(modelItem => item.CreationDate)

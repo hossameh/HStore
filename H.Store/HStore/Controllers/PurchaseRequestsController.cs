@@ -6,28 +6,26 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HStore;
-using Microsoft.AspNetCore.Authorization;
 
 namespace HStore.Controllers
 {
-    [Authorize]
-    public class SuppliersPaymentsController : Controller
+    public class PurchaseRequestsController : Controller
     {
         private readonly HStoreDBContext _context;
 
-        public SuppliersPaymentsController(HStoreDBContext context)
+        public PurchaseRequestsController(HStoreDBContext context)
         {
             _context = context;
         }
 
-        // GET: SuppliersPayments
+        // GET: PurchaseRequests
         public async Task<IActionResult> Index()
         {
-            var hStoreDBContext = _context.SuppliersPayments.Include(s => s.Supplier).Include(s => s.User);
+            var hStoreDBContext = _context.PurchaseRequest.Include(p => p.Supplier).Include(p => p.User);
             return View(await hStoreDBContext.ToListAsync());
         }
 
-        // GET: SuppliersPayments/Details/5
+        // GET: PurchaseRequests/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -35,19 +33,19 @@ namespace HStore.Controllers
                 return NotFound();
             }
 
-            var suppliersPayments = await _context.SuppliersPayments
-                .Include(s => s.Supplier)
-                .Include(s => s.User)
+            var purchaseRequest = await _context.PurchaseRequest
+                .Include(p => p.Supplier)
+                .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (suppliersPayments == null)
+            if (purchaseRequest == null)
             {
                 return NotFound();
             }
 
-            return View(suppliersPayments);
+            return View(purchaseRequest);
         }
 
-        // GET: SuppliersPayments/Create
+        // GET: PurchaseRequests/Create
         public IActionResult Create()
         {
             ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Name");
@@ -55,25 +53,25 @@ namespace HStore.Controllers
             return View();
         }
 
-        // POST: SuppliersPayments/Create
+        // POST: PurchaseRequests/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,PaymentValue,PaymentDate,PaymentComment,SupplierId,CreationDate,CreationBy,IsActive,UserId")] SuppliersPayments suppliersPayments)
+        public async Task<IActionResult> Create([Bind("Id,InvoiceNumber,PurchaseDate,SupplierId,Paid,Remaining,TotalAmount,CreationDate,CreationBy,IsActive,UserId")] PurchaseRequest purchaseRequest)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(suppliersPayments);
+                _context.Add(purchaseRequest);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Id", suppliersPayments.SupplierId);
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", suppliersPayments.UserId);
-            return View(suppliersPayments);
+            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Name", purchaseRequest.SupplierId);
+            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", purchaseRequest.UserId);
+            return View(purchaseRequest);
         }
 
-        // GET: SuppliersPayments/Edit/5
+        // GET: PurchaseRequests/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -81,24 +79,24 @@ namespace HStore.Controllers
                 return NotFound();
             }
 
-            var suppliersPayments = await _context.SuppliersPayments.FindAsync(id);
-            if (suppliersPayments == null)
+            var purchaseRequest = await _context.PurchaseRequest.FindAsync(id);
+            if (purchaseRequest == null)
             {
                 return NotFound();
             }
-            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Id", suppliersPayments.SupplierId);
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", suppliersPayments.UserId);
-            return View(suppliersPayments);
+            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Name", purchaseRequest.SupplierId);
+            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", purchaseRequest.UserId);
+            return View(purchaseRequest);
         }
 
-        // POST: SuppliersPayments/Edit/5
+        // POST: PurchaseRequests/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to, for 
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,PaymentValue,PaymentDate,PaymentComment,SupplierId,CreationDate,CreationBy,IsActive,UserId")] SuppliersPayments suppliersPayments)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,InvoiceNumber,PurchaseDate,SupplierId,Paid,Remaining,TotalAmount,CreationDate,CreationBy,IsActive,UserId")] PurchaseRequest purchaseRequest)
         {
-            if (id != suppliersPayments.Id)
+            if (id != purchaseRequest.Id)
             {
                 return NotFound();
             }
@@ -107,12 +105,12 @@ namespace HStore.Controllers
             {
                 try
                 {
-                    _context.Update(suppliersPayments);
+                    _context.Update(purchaseRequest);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!SuppliersPaymentsExists(suppliersPayments.Id))
+                    if (!PurchaseRequestExists(purchaseRequest.Id))
                     {
                         return NotFound();
                     }
@@ -123,12 +121,12 @@ namespace HStore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Id", suppliersPayments.SupplierId);
-            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", suppliersPayments.UserId);
-            return View(suppliersPayments);
+            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Id", purchaseRequest.SupplierId);
+            ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", purchaseRequest.UserId);
+            return View(purchaseRequest);
         }
 
-        // GET: SuppliersPayments/Delete/5
+        // GET: PurchaseRequests/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -136,32 +134,32 @@ namespace HStore.Controllers
                 return NotFound();
             }
 
-            var suppliersPayments = await _context.SuppliersPayments
-                .Include(s => s.Supplier)
-                .Include(s => s.User)
+            var purchaseRequest = await _context.PurchaseRequest
+                .Include(p => p.Supplier)
+                .Include(p => p.User)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (suppliersPayments == null)
+            if (purchaseRequest == null)
             {
                 return NotFound();
             }
 
-            return View(suppliersPayments);
+            return View(purchaseRequest);
         }
 
-        // POST: SuppliersPayments/Delete/5
+        // POST: PurchaseRequests/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var suppliersPayments = await _context.SuppliersPayments.FindAsync(id);
-            _context.SuppliersPayments.Remove(suppliersPayments);
+            var purchaseRequest = await _context.PurchaseRequest.FindAsync(id);
+            _context.PurchaseRequest.Remove(purchaseRequest);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SuppliersPaymentsExists(int id)
+        private bool PurchaseRequestExists(int id)
         {
-            return _context.SuppliersPayments.Any(e => e.Id == id);
+            return _context.PurchaseRequest.Any(e => e.Id == id);
         }
     }
 }

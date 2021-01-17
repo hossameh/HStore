@@ -1,0 +1,109 @@
+﻿@model HStore.PurchaseRequest
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+
+        <div class="card">
+            <div class="card-header card-header-tabs card-header-primary">
+                <div class="nav-tabs-navigation">
+                    <div class="nav-tabs-wrapper">
+                        <ul class="nav nav-tabs" data-tabs="tabs">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#pr" data-toggle="tab">
+                                    <i class="material-icons">add_shopping_cart</i> Purchase Request
+                                    <div class="ripple-container"></div>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#items" data-toggle="tab">
+                                    <i class="material-icons">add_task</i> Purchase Request Items
+                                    <div class="ripple-container"></div>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="pr">
+                            <div class="col-lg-12">
+                                <form asp-action="Create">
+                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                                    <div class="form-group">
+                                        <label asp-for="InvoiceNumber" class="control-label"></label>
+                                        <input asp-for="InvoiceNumber" class="form-control" />
+                                        <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="SupplierId" class="control-label"></label>
+                                        <select asp-for="SupplierId" class="form-control" asp-items="ViewBag.SupplierId"></select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="PurchaseDate" class="control-label"></label>
+                                        <input asp-for="PurchaseDate" class="form-control" />
+                                        <span asp-validation-for="PurchaseDate" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Paid" class="control-label"></label>
+                                        <input asp-for="Paid" class="form-control" type="number" />
+                                        <span asp-validation-for="Paid" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <label asp-for="Remaining" class="control-label"></label>
+                                        <input asp-for="Remaining" class="form-control" type="number" />
+                                        <span asp-validation-for="Remaining" class="text-danger"></span>
+                                    </div>
+                                    <div class="form-group">
+                                        <input type="submit" value="Create" class="btn btn-success" />
+                                        <a asp-action="Index" class="btn btn-dark pull-right">Back to List</a>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="tab-pane" id="items">
+                            <div class="col-lg-12">
+                                <div class="form-group">
+                                    <label class="control-label">Item</label>
+                                    <select class="form-control" asp-items="ViewBag.SupplierId"></select>
+                                </div>
+                                <div class="form-group">
+                                    <label id="PurchasePrice" class="control-label">Purchase Price</label>
+                                    <input type="number" class="form-control" />
+                                    <span class="text-danger"></span>
+                                </div>
+
+                                <div class="form-group">
+                                    <label id="PurchaseQuantity" class="control-label">Purchase Quantity</label>
+                                    <input type="number" class="form-control" />
+                                    <span class="text-danger"></span>
+                                </div>
+                                <table class="table">
+                                    <thead class="text-primary">
+                                    <th>Item Code</th>
+                                    <th>Item Name</th>
+                                    <th>Purchase Price</th>
+                                    <th>Purchase Quantity</th>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>12</td>
+                                            <td>Name</td>
+                                            <td>Price</td>
+                                            <td>Quantity</td>
+
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                        </div>
+                </div>
+            </div>
+    </div>
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
