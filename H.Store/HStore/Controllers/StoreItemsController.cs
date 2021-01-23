@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HStore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace HStore.Controllers
 {
@@ -14,10 +15,12 @@ namespace HStore.Controllers
     public class StoreItemsController : Controller
     {
         private readonly HStoreDBContext _context;
+        private UserManager<IdentityUser> _userManager;
 
-        public StoreItemsController(HStoreDBContext context)
+        public StoreItemsController(HStoreDBContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: StoreItems
@@ -62,6 +65,7 @@ namespace HStore.Controllers
         {
             if (ModelState.IsValid)
             {
+                storeItems.UserId= _userManager.GetUserId(User);
                 _context.Add(storeItems);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -103,6 +107,7 @@ namespace HStore.Controllers
             {
                 try
                 {
+                   storeItems.UserId = _userManager.GetUserId(User);
                     _context.Update(storeItems);
                     await _context.SaveChangesAsync();
                 }

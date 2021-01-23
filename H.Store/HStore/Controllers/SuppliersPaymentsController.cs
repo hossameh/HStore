@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HStore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace HStore.Controllers
 {
@@ -14,10 +15,12 @@ namespace HStore.Controllers
     public class SuppliersPaymentsController : Controller
     {
         private readonly HStoreDBContext _context;
+        private UserManager<IdentityUser> _userManager;
 
-        public SuppliersPaymentsController(HStoreDBContext context)
+        public SuppliersPaymentsController(HStoreDBContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: SuppliersPayments
@@ -64,11 +67,19 @@ namespace HStore.Controllers
         {
             if (ModelState.IsValid)
             {
+                suppliersPayments.UserId = _userManager.GetUserId(User);
+                suppliersPayments.CreationDate = DateTime.Now;
                 _context.Add(suppliersPayments);
+                var supplier = _context.Suppliers.Find(suppliersPayments.SupplierId);
+                if (supplier != null)
+                {
+                    supplier.TotalRemaining = (supplier.TotalRemaining == null ? 0 : supplier.TotalRemaining) - suppliersPayments.PaymentValue;
+                    _context.Suppliers.Update(supplier);
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Id", suppliersPayments.SupplierId);
+            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Name", suppliersPayments.SupplierId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", suppliersPayments.UserId);
             return View(suppliersPayments);
         }
@@ -86,7 +97,7 @@ namespace HStore.Controllers
             {
                 return NotFound();
             }
-            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Id", suppliersPayments.SupplierId);
+            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Name", suppliersPayments.SupplierId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", suppliersPayments.UserId);
             return View(suppliersPayments);
         }
@@ -107,7 +118,15 @@ namespace HStore.Controllers
             {
                 try
                 {
+                    suppliersPayments.UserId = _userManager.GetUserId(User);
                     _context.Update(suppliersPayments);
+                    var oldPaid = _context.SuppliersPayments.Find(suppliersPayments.Id).PaymentValue;
+                    var supplier = _context.Suppliers.Find(suppliersPayments.SupplierId);
+                    if (supplier != null)
+                    {
+                        supplier.TotalRemaining = (supplier.TotalRemaining == null ? 0 : supplier.TotalRemaining) - suppliersPayments.PaymentValue + oldPaid;
+                        _context.Suppliers.Update(supplier);
+                    }
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -123,7 +142,7 @@ namespace HStore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Id", suppliersPayments.SupplierId);
+            ViewData["SupplierId"] = new SelectList(_context.Suppliers, "Id", "Name", suppliersPayments.SupplierId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", suppliersPayments.UserId);
             return View(suppliersPayments);
         }
@@ -154,6 +173,12 @@ namespace HStore.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var suppliersPayments = await _context.SuppliersPayments.FindAsync(id);
+            var supplier = _context.Suppliers.Find(suppliersPayments.SupplierId);
+            if (supplier != null)
+            {
+                supplier.TotalRemaining = (supplier.TotalRemaining == null ? 0 : supplier.TotalRemaining) + suppliersPayments.PaymentValue;
+                _context.Suppliers.Update(supplier);
+            }
             _context.SuppliersPayments.Remove(suppliersPayments);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

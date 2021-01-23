@@ -5,105 +5,196 @@
 }
 
 
-        <div class="card">
-            <div class="card-header card-header-tabs card-header-primary">
-                <div class="nav-tabs-navigation">
-                    <div class="nav-tabs-wrapper">
-                        <ul class="nav nav-tabs" data-tabs="tabs">
-                            <li class="nav-item">
-                                <a class="nav-link active" href="#pr" data-toggle="tab">
-                                    <i class="material-icons">add_shopping_cart</i> Purchase Request
-                                    <div class="ripple-container"></div>
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#items" data-toggle="tab">
-                                    <i class="material-icons">add_task</i> Purchase Request Items
-                                    <div class="ripple-container"></div>
-                                </a>
-                            </li>
-                        </ul>
+<div class="card">
+    <div class="card-header card-header-primary">
+        <h4 class="card-title">New Purchase Request</h4>
+        <p class="card-category">Purchase Request</p>
+    </div>
+    <div class="card-body">
+        <form id="NewOrderForm">
+            <div class="row">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="InvoiceNumber" class="control-label"></label>
+                        <input asp-for="InvoiceNumber" class="form-control" />
+                        <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <label asp-for="SupplierId" class="control-label"></label>
+                        <select asp-for="SupplierId" class="form-control" asp-items="ViewBag.SupplierId"></select>
                     </div>
                 </div>
             </div>
-            <div class="card-body">
-                <div class="row">
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="pr">
-                            <div class="col-lg-12">
-                                <form asp-action="Create">
-                                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-                                    <div class="form-group">
-                                        <label asp-for="InvoiceNumber" class="control-label"></label>
-                                        <input asp-for="InvoiceNumber" class="form-control" />
-                                        <span asp-validation-for="InvoiceNumber" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="SupplierId" class="control-label"></label>
-                                        <select asp-for="SupplierId" class="form-control" asp-items="ViewBag.SupplierId"></select>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="PurchaseDate" class="control-label"></label>
-                                        <input asp-for="PurchaseDate" class="form-control" />
-                                        <span asp-validation-for="PurchaseDate" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Paid" class="control-label"></label>
-                                        <input asp-for="Paid" class="form-control" type="number" />
-                                        <span asp-validation-for="Paid" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <label asp-for="Remaining" class="control-label"></label>
-                                        <input asp-for="Remaining" class="form-control" type="number" />
-                                        <span asp-validation-for="Remaining" class="text-danger"></span>
-                                    </div>
-                                    <div class="form-group">
-                                        <input type="submit" value="Create" class="btn btn-success" />
-                                        <a asp-action="Index" class="btn btn-dark pull-right">Back to List</a>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                        <div class="tab-pane" id="items">
-                            <div class="col-lg-12">
-                                <div class="form-group">
-                                    <label class="control-label">Item</label>
-                                    <select class="form-control" asp-items="ViewBag.SupplierId"></select>
-                                </div>
-                                <div class="form-group">
-                                    <label id="PurchasePrice" class="control-label">Purchase Price</label>
-                                    <input type="number" class="form-control" />
-                                    <span class="text-danger"></span>
-                                </div>
-
-                                <div class="form-group">
-                                    <label id="PurchaseQuantity" class="control-label">Purchase Quantity</label>
-                                    <input type="number" class="form-control" />
-                                    <span class="text-danger"></span>
-                                </div>
-                                <table class="table">
-                                    <thead class="text-primary">
-                                    <th>Item Code</th>
-                                    <th>Item Name</th>
-                                    <th>Purchase Price</th>
-                                    <th>Purchase Quantity</th>
-                                    </thead>
-                                    <tbody>
-                                        <tr>
-                                            <td>12</td>
-                                            <td>Name</td>
-                                            <td>Price</td>
-                                            <td>Quantity</td>
-
-                                        </tr>
-                                    </tbody>
-                                </table>
-                            </div>
-                        </div>
-                        </div>
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="PurchaseDate" class="control-label"></label>
+                        <input asp-for="PurchaseDate" class="form-control" />
+                        <span asp-validation-for="PurchaseDate" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="Paid" class="control-label"></label>
+                        <input asp-for="Paid" class="form-control" type="number" />
+                        <span asp-validation-for="Paid" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label asp-for="Remaining" class="control-label"></label>
+                        <input asp-for="Remaining" class="form-control" type="number" />
+                        <span asp-validation-for="Remaining" class="text-danger"></span>
+                    </div>
                 </div>
             </div>
+            <br />
+            <div class="row">
+                <div class="card-header card-header-info">
+                    <h6 class="card-title">Purchase Request Items</h6>
+                    @*<p class="card-category">Purchase Request</p>*@
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="control-label">Item</label>
+                        <select id="ItemId" name="ItemId" class="form-control" asp-items="ViewBag.Items"></select>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label">Purchase Price</label>
+                        <input type="number" id="PurchasePrice" name="PurchasePrice" min="1" class="form-control" />
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="form-group">
+                        <label class="control-label">Purchase Quantity</label>
+                        <input type="number" id="PurchaseQuantity" min="1" name="PurchaseQuantity" class="form-control" />
+                        <span class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="button" value="+" id="addToList" class="btn btn-success" />
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <table id="detailsTable" class="table">
+                    <thead class="text-info">
+                    <th>Item Name</th>
+                    <th>Purchase Price</th>
+                    <th>Purchase Quantity</th>
+                    <th></th>
+                    <tbody>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group">
+                        <input type="button" id="saveOrder" value="Create" class="btn btn-success" />
+                        <a asp-action="Index" class="btn btn-dark pull-right">Back to List</a>
+                    </div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </form>
     </div>
+</div>
+<script src="~/Scripts/jquery-3.4.1.js"></script>
+<script>
+
+    //Add Multiple Order.
+    $("#addToList").click(function (e) {
+        e.preventDefault();
+
+        if ($.trim($("#ItemId").val()) == "" || $.trim($("#PurchasePrice").val()) == "" || $.trim($("#PurchaseQuantity").val()) == "") return;
+
+        var ItemId = $("#ItemId").val(),
+            PurchasePrice = $("#PurchasePrice").val(),
+            PurchaseQuantity = $("#PurchaseQuantity").val(),
+            detailsTableBody = $("#detailsTable tbody");
+
+        var productItem = '<tr><td style="display:none;">' + ItemId + '</td><td>' + $("#ItemId option:selected").text() + '</td><td>' + PurchasePrice + '</td><td>' + PurchaseQuantity + '</td><td><a data-itemId="0" href="#" class="deleteItem">Remove</a></td></tr>';
+        detailsTableBody.append(productItem);
+        clearItem();
+    });
+    //After Add A New Order In The List, Clear Clean The Form For Add More Order.
+    function clearItem() {
+        $("#ItemId").val('');
+        $("#PurchasePrice").val('');
+        $("#PurchaseQuantity").val('');
+    }
+    // After Add A New Order In The List, If You Want, You Can Remove It.
+    $(document).on('click', 'a.deleteItem', function (e) {
+        e.preventDefault();
+        var $self = $(this);
+        if ($(this).attr('data-itemId') == "0") {
+            $(this).parents('tr').css("background-color", "#ff6347").fadeOut(800, function () {
+                $(this).remove();
+            });
+        }
+    });
+    //After Click Save Button Pass All Data View To Controller For Save Database
+    function saveOrder(data) {
+        return $.ajax({
+            contentType: 'application/x-www-form-urlencoded',
+           // dataType: 'JSON',
+            type: 'POST',
+            url: "/PurchaseRequests/CreatePR",
+            data: data,
+            success: function (result) {
+                alert(result);
+               // location.reload();
+                var url ="@Url.Action("Index", "PurchaseRequests")";
+                window.location.href = url; 
+            },
+            error: function () {
+                alert("Error!")
+            }
+        });
+    }
+    //Collect Multiple Order List For Pass To Controller
+    $("#saveOrder").click(function (e) {
+        e.preventDefault();
+        debugger;
+        var orderArr = [];
+        orderArr.length = 0;
+
+        $.each($("#detailsTable tbody tr"), function () {
+            orderArr.push({
+                ItemId: $(this).find('td:eq(0)').html(),
+                PurchasePrice: $(this).find('td:eq(2)').html(),
+                PurchaseQuantity: $(this).find('td:eq(3)').html()
+            });
+        });
+
+        var data = //JSON.stringify({
+        {
+            invoicenumber: $("#InvoiceNumber").val(),
+            purchasedate: $("#PurchaseDate").val(),
+            supplierid: $("#SupplierId").val(),
+            paid: $("#Paid").val(),
+            remaining: $("#Remaining").val(),
+            purchaserequestdetails: orderArr
+        };
+
+        $.when(saveOrder(data)).then(function (response) {
+            console.log(response);
+        }).fail(function (err) {
+            console.log(err);
+        });
+    });
+</script>
     @section Scripts {
         @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
     }

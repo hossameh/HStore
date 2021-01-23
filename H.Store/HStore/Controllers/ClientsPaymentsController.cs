@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HStore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace HStore.Controllers
 {
@@ -14,10 +15,12 @@ namespace HStore.Controllers
     public class ClientsPaymentsController : Controller
     {
         private readonly HStoreDBContext _context;
+        private UserManager<IdentityUser> _userManager;
 
-        public ClientsPaymentsController(HStoreDBContext context)
+        public ClientsPaymentsController(HStoreDBContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: ClientsPayments
@@ -64,7 +67,14 @@ namespace HStore.Controllers
         {
             if (ModelState.IsValid)
             {
+                clientsPayments.UserId= _userManager.GetUserId(User);
                 _context.Add(clientsPayments);
+                var client = _context.Clients.Find(clientsPayments.ClientId);
+                if (client != null)
+                {
+                    client.TotalRemaining = (client.TotalRemaining == null ? 0 : client.TotalRemaining) - clientsPayments.PaymentValue;
+                    _context.Clients.Update(client);
+                }
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -107,6 +117,14 @@ namespace HStore.Controllers
             {
                 try
                 {
+                    clientsPayments.UserId = _userManager.GetUserId(User);
+                    var oldPaid = _context.ClientsPayments.Find(clientsPayments.Id).PaymentValue;
+                    var client = _context.Clients.Find(clientsPayments.ClientId);
+                    if (client != null)
+                    {
+                        client.TotalRemaining = (client.TotalRemaining == null ? 0 : client.TotalRemaining) - clientsPayments.PaymentValue + oldPaid;
+                        _context.Clients.Update(client);
+                    }
                     _context.Update(clientsPayments);
                     await _context.SaveChangesAsync();
                 }
@@ -123,7 +141,7 @@ namespace HStore.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Id", clientsPayments.ClientId);
+            ViewData["ClientId"] = new SelectList(_context.Clients, "Id", "Name", clientsPayments.ClientId);
             ViewData["UserId"] = new SelectList(_context.AspNetUsers, "Id", "Id", clientsPayments.UserId);
             return View(clientsPayments);
         }
@@ -154,6 +172,12 @@ namespace HStore.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             var clientsPayments = await _context.ClientsPayments.FindAsync(id);
+            var client = _context.Clients.Find(clientsPayments.ClientId);
+            if (client != null)
+            {
+                client.TotalRemaining = (client.TotalRemaining == null ? 0 : client.TotalRemaining) + clientsPayments.PaymentValue ;
+                _context.Clients.Update(client);
+            }
             _context.ClientsPayments.Remove(clientsPayments);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));

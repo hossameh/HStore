@@ -5,19 +5,20 @@ using System.Threading.Tasks;
 
 namespace HStore.ViewModels
 {
-    public class PurchaseRequestVM
+    public class SellRequestVM
     {
         public int Id { get; set; }
         public string InvoiceNumber { get; set; }
-        public DateTime? PurchaseDate { get; set; }
-        public int SupplierId { get; set; }
+        public DateTime? SellDate { get; set; }
+        public int ClientId { get; set; }
         public decimal? Paid { get; set; }
         public decimal? Remaining { get; set; }
-        public  List<PurchaseRequestDetailsVM> PurchaseRequestDetails { get; set; }
+        public  List<SellRequesttDetailsVM> SellRequestDetails { get; set; }
     }
-    public class PurchaseRequestDetailsVM {
+    public class SellRequesttDetailsVM
+    {
         public int ItemId { get; set; }
-        public decimal? PurchasePrice { get; set; }
-        public int? PurchaseQuantity { get; set; }
+        public decimal? SellPrice { get; set; }
+        public int? SellQuantity { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using HStore;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 
 namespace HStore.Controllers
 {
@@ -14,10 +15,12 @@ namespace HStore.Controllers
     public class SuppliersController : Controller
     {
         private readonly HStoreDBContext _context;
+        private UserManager<IdentityUser> _userManager;
 
-        public SuppliersController(HStoreDBContext context)
+        public SuppliersController(HStoreDBContext context, UserManager<IdentityUser> userManager)
         {
             _context = context;
+            _userManager = userManager;
         }
 
         // GET: Suppliers
@@ -62,6 +65,7 @@ namespace HStore.Controllers
         {
             if (ModelState.IsValid)
             {
+                suppliers.UserId = _userManager.GetUserId(User);
                 _context.Add(suppliers);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -103,6 +107,7 @@ namespace HStore.Controllers
             {
                 try
                 {
+                    suppliers.UserId = _userManager.GetUserId(User);
                     _context.Update(suppliers);
                     await _context.SaveChangesAsync();
                 }

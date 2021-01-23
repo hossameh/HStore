@@ -1,4 +1,4 @@
-﻿@model HStore.PurchaseRequest
+﻿@model HStore.SellRequest
 
 @{
     ViewData["Title"] = "Edit";
@@ -6,8 +6,8 @@
 
 <div class="card">
     <div class="card-header card-header-primary">
-        <h4 class="card-title">Edit Purchase Request</h4>
-        <p class="card-category">Purchase Request</p>
+        <h4 class="card-title">Edit Sell Request</h4>
+        <p class="card-category">Sell Request</p>
     </div>
     <div class="card-body">
         <form id="NewOrderForm">
@@ -23,17 +23,18 @@
                 </div>
                 <div class="col-md-6">
                     <div class="form-group">
-                        <label asp-for="SupplierId" class="control-label"></label>
-                        <select disabled asp-for="SupplierId" class="form-control" asp-items="ViewBag.SupplierId"></select>
+                        <label asp-for="ClientId" class="control-label"></label>
+                        <select asp-for="ClientId" class="form-control" asp-items="ViewBag.ClientId"></select>
                     </div>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-md-4">
                     <div class="form-group">
-                        <label asp-for="PurchaseDate" class="control-label"></label>
-                        <input asp-for="PurchaseDate" class="form-control" />
-                        <span asp-validation-for="PurchaseDate" class="text-danger"></span>
+                        <label asp-for="SellDate" class="control-label"></label>
+                        <input asp-for="SellDate" class="form-control" />
+                        <span asp-validation-for="SellDate" class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-4">
@@ -51,10 +52,11 @@
                     </div>
                 </div>
             </div>
+
             <br />
             <div class="row">
                 <div class="card-header card-header-info">
-                    <h6 class="card-title">Purchase Request Items</h6>
+                    <h6 class="card-title">Sell Request Items</h6>
                     @*<p class="card-category">Purchase Request</p>*@
                 </div>
             </div>
@@ -68,15 +70,15 @@
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="control-label">Purchase Price</label>
-                        <input type="number" id="PurchasePrice" name="PurchasePrice" min="1" class="form-control" />
+                        <label class="control-label">Sell Price</label>
+                        <input type="number" id="SellPrice" name="SellPrice" min="1" class="form-control" />
                         <span class="text-danger"></span>
                     </div>
                 </div>
                 <div class="col-md-3">
                     <div class="form-group">
-                        <label class="control-label">Purchase Quantity</label>
-                        <input type="number" id="PurchaseQuantity" min="1" name="PurchaseQuantity" class="form-control" />
+                        <label class="control-label">Sell Quantity</label>
+                        <input type="number" id="SellQuantity" min="1" name="SellQuantity" class="form-control" />
                         <span class="text-danger"></span>
                     </div>
                 </div>
@@ -86,23 +88,24 @@
                     </div>
                 </div>
             </div>
+
             <div class="row">
                 <table id="detailsTable" class="table">
                     <thead class="text-info">
                     <th>Item Name</th>
-                    <th>Purchase Price</th>
-                    <th>Purchase Quantity</th>
+                    <th>Sell Price</th>
+                    <th>Sell Quantity</th>
                     <th></th>
                     <tbody>
-                        @foreach (var item in Model.PurchaseRequestDetails)
+                        @foreach (var item in Model.SellRequestDetails)
                         {
-                        <tr>
-                            <td style="display:none;">@item.ItemId</td>
-                            <td>@item.Item.Name</td>
-                            <td>@item.PurchasePrice</td>
-                            <td>@item.PurchaseQuantity</td>
-                            <td><a data-itemId="@item.Id" href="#" class="deleteItem">Remove</a></td>
-                        </tr>
+                            <tr>
+                                <td style="display:none;">@item.ItemId</td>
+                                <td>@item.Item.Name</td>
+                                <td>@item.SellPrice</td>
+                                <td>@item.SellQuantity</td>
+                                <td><a data-itemId="@item.Id" href="#" class="deleteItem">Remove</a></td>
+                            </tr>
                         }
                     </tbody>
                 </table>
@@ -111,7 +114,7 @@
             <div class="row">
                 <div class="col-md-6">
                     <div class="form-group">
-                        <input type="button" id="saveOrder" value="Edit" class="btn btn-success" />
+                        <input type="button" id="saveOrder" value="Create" class="btn btn-success" />
                         <a asp-action="Index" class="btn btn-dark pull-right">Back to List</a>
                     </div>
                     <div class="clearfix"></div>
@@ -120,6 +123,7 @@
         </form>
     </div>
 </div>
+
 <script src="~/Scripts/jquery-3.4.1.js"></script>
 <script>
 
@@ -127,22 +131,22 @@
     $("#addToList").click(function (e) {
         e.preventDefault();
 
-        if ($.trim($("#ItemId").val()) == "" || $.trim($("#PurchasePrice").val()) == "" || $.trim($("#PurchaseQuantity").val()) == "") return;
+        if ($.trim($("#ItemId").val()) == "" || $.trim($("#SellPrice").val()) == "" || $.trim($("#SellQuantity").val()) == "") return;
 
         var ItemId = $("#ItemId").val(),
-            PurchasePrice = $("#PurchasePrice").val(),
-            PurchaseQuantity = $("#PurchaseQuantity").val(),
+            SellPrice = $("#SellPrice").val(),
+            SellQuantity = $("#SellQuantity").val(),
             detailsTableBody = $("#detailsTable tbody");
 
-        var productItem = '<tr><td style="display:none;">' + ItemId + '</td><td>' + $("#ItemId option:selected").text() + '</td><td>' + PurchasePrice + '</td><td>' + PurchaseQuantity + '</td><td><a data-itemId="0" href="#" class="deleteItem">Remove</a></td></tr>';
+        var productItem = '<tr><td style="display:none;">' + ItemId + '</td><td>' + $("#ItemId option:selected").text() + '</td><td>' + SellPrice + '</td><td>' + SellQuantity + '</td><td><a data-itemId="0" href="#" class="deleteItem">Remove</a></td></tr>';
         detailsTableBody.append(productItem);
         clearItem();
     });
     //After Add A New Order In The List, Clear Clean The Form For Add More Order.
     function clearItem() {
         $("#ItemId").val('');
-        $("#PurchasePrice").val('');
-        $("#PurchaseQuantity").val('');
+        $("#SellPrice").val('');
+        $("#SellQuantity").val('');
     }
     // After Add A New Order In The List, If You Want, You Can Remove It.
     $(document).on('click', 'a.deleteItem', function (e) {
@@ -157,7 +161,7 @@
                 contentType: 'application/x-www-form-urlencoded',
                 // dataType: 'JSON',
                 type: 'POST',
-                url: "/PurchaseRequests/DeletePRDetails",
+                url: "/SellRequests/DeleteSRDetails",
                 data: { id: $(this).attr('data-itemId')},
                 success: function (result) {
                     if (result == "Ok") {
@@ -178,12 +182,12 @@
             contentType: 'application/x-www-form-urlencoded',
            // dataType: 'JSON',
             type: 'POST',
-            url: "/PurchaseRequests/EditPR",
+            url: "/SellRequests/EditSR",
             data: data,
             success: function (result) {
                 alert(result);
                // location.reload();
-                var url ="@Url.Action("Index", "PurchaseRequests")";
+                var url ="@Url.Action("Index", "SellRequests")";
                 window.location.href = url;
             },
             error: function () {
@@ -202,21 +206,21 @@
             if ($(this).find('td:eq(4) a').attr('data-itemId') == "0") {
                 orderArr.push({
                     ItemId: $(this).find('td:eq(0)').html(),
-                    PurchasePrice: $(this).find('td:eq(2)').html(),
-                    PurchaseQuantity: $(this).find('td:eq(3)').html()
+                    SellPrice: $(this).find('td:eq(2)').html(),
+                    SellQuantity: $(this).find('td:eq(3)').html()
                 });
             }
         });
-    
+
         var data = //JSON.stringify({
         {
             id: $('#Id').val(),
             invoicenumber: $("#InvoiceNumber").val(),
-            purchasedate: $("#PurchaseDate").val(),
-            supplierid: $("#SupplierId").val(),
+            selldate: $("#SellDate").val(),
+            clientid: $("#ClientId").val(),
             paid: $("#Paid").val(),
             remaining: $("#Remaining").val(),
-            purchaserequestdetails: orderArr
+            sellrequestdetails: orderArr
         };
 
         $.when(saveOrder(data)).then(function (response) {

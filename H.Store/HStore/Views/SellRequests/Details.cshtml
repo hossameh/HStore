@@ -1,4 +1,4 @@
-﻿@model HStore.PurchaseRequest
+﻿@model HStore.SellRequest
 
 @{
     ViewData["Title"] = "Details";
@@ -6,7 +6,7 @@
 
 <div class="card">
     <div class="card-header card-header-primary">
-        <h4 class="card-title">Purchase Request Details</h4>
+        <h4 class="card-title">Sell Request Details</h4>
         <p class="card-category"></p>
     </div>
     <div class="card-body">
@@ -18,16 +18,16 @@
                 @Html.DisplayFor(model => model.InvoiceNumber)
             </dd>
             <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Supplier)
+                @Html.DisplayNameFor(model => model.Client)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Supplier.Name)
+                @Html.DisplayFor(model => model.Client.Name)
             </dd>
             <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.PurchaseDate)
+                @Html.DisplayNameFor(model => model.SellDate)
             </dt>
             <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.PurchaseDate)
+                @Html.DisplayFor(model => model.SellDate)
             </dd>
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Paid)
@@ -61,29 +61,29 @@
             </dd>
             <dt class="col-sm-2">
                 Items
-                </dt>
+            </dt>
             <dd class="col-sm-10">
                 <table id="detailsTable" class="table">
                     <thead class="text-info">
                     <th>Item Name</th>
-                    <th>Purchase Price</th>
-                    <th>Purchase Quantity</th>
+                    <th>Sell Price</th>
+                    <th>Sell Quantity</th>
                     <th>Total</th>
                     <tbody>
-                        @foreach (var item in Model.PurchaseRequestDetails)
+                        @foreach (var item in Model.SellRequestDetails)
                         {
                             <tr>
-                               
+
                                 <td>@item.Item.Name</td>
-                                <td>@item.PurchasePrice</td>
-                                <td>@item.PurchaseQuantity</td>
-                                <td>@item.PurchaseTotalAmount</td>
+                                <td>@item.SellPrice</td>
+                                <td>@item.SellQuantity</td>
+                                <td>@item.SellTotalAmount</td>
                             </tr>
                         }
                     </tbody>
                 </table>
             </dd>
-</dl>
+        </dl>
     </div>
     <div>
         <a asp-action="Edit" class="btn btn-primary" asp-route-id="@Model.Id">Edit</a> |
